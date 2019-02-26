@@ -48,16 +48,16 @@ Analytics-zoo does not support following parameters currently, so we just commen
 The main purpose of this repository is to decribe the convertion from Keras to analytics-zoo so that we rename the notebooks to make it more experienced-user oriented. We keep the chapter index so you could still make a reference to the original notebook [here](https://github.com/fchollet/deep-learning-with-python-notebooks#companion-jupyter-notebooks-for-the-book-deep-learning-with-python). We only keep some key description of the original notebook.
 
 * Chapter 2:
-    * [2.1: MNIST]()
+    * [2.1: MNIST](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/2.1-mnist.ipynb)
 * Chapter 3:
-    * [3.5: Binary classification]()
-    * [3.6: Multi-class classification]()
-    * [3.7: Regression]()
+    * [3.5: Binary classification](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/3.5-binary-classification.ipynb)
+    * [3.6: Multi-class classification](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/3.6-multi-class-classification.ipynb)
+    * [3.7: Regression](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/3.7-regression.ipynb)
 * Chapter 4:
-    * [4.4: Regularization and Dropout]()
+    * [4.4: Regularization and Dropout](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/4.4-regularization-and-dropout.ipynb)
 * Chapter 5:
-    * [5.1: CNN]()
+    * [5.1: CNN](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/5.1-cnn.ipynb)
 * Chapter 6:
-    * [6.2: RNN]()
+    * [6.2: RNN](https://github.com/Litchilitchy/zoo-tutorials/blob/master/keras/6.2-rnn.ipynb)
 
     
