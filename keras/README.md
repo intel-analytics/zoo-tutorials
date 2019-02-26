@@ -38,10 +38,10 @@ The return of `evaluate` method is an `EvaluationResult` object, which is differ
 The return of `predict` method is RDD, so you need to call `collect` method to collect them, see [Chapter 3.5]()
 
 #### Parameters not supported
-Analytics-zoo does not support following parameters currently
+Analytics-zoo does not support following parameters currently, so we just comment these code in this notebook.
 
-* validation_split:
-* verbose:
+* validation_split: To split the training data into two parts, another part is used for validation
+* verbose: To control the information showed during training
 
 ## Table of contents
 
