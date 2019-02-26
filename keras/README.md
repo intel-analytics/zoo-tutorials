@@ -1,11 +1,9 @@
 # Tutorials for running distribued Keras (v1.2.2) on Analytics Zoo
 Tutorials for running _**distribued Keras (v1.2.2) on Analytics Zoo**_. These tutorials are ported from François Chollet's [Jupyter notebooks](https://github.com/fchollet/deep-learning-with-python-notebooks) for the book [Deep Learning with Python (Manning Publications)](https://www.manning.com/books/deep-learning-with-python?a_aid=keras&a_bid=76564dff)
 
-This repository is built to describe how to write Keras-style code and directly run it in analytics-zoo so that we could run the original Keras code in distributed mode via limited modification. We make this repository based on notebook https://github.com/fchollet/deep-learning-with-python-notebooks#companion-jupyter-notebooks-for-the-book-deep-learning-with-python, which is the sample code repository of book "Deep Learning with Python" based on Keras 2.0.8 and we pick some basic chapters from it. 
+This repository is built to describe how to write Keras-style code and directly run it in analytics-zoo so that we could run the original Keras code in distributed mode via limited modification. The original notebook is based on Keras 2.0.8. Currently analytics-zoo builds its Keras-style code based on Keras 1.2.2. Thus, this repository contains the code of implementation of original Keras 2.0.8 code based on Keras 1.2.2, and how to modify the code in order to run it in analytics-zoo.
 
-Currently analytics-zoo builds its Keras-style code based on Keras 1.2.2. Thus, this repository contains the code of implementation of original Keras 2.0.8 code based on Keras 1.2.2, and how to modify the code in order to run it in analytics-zoo.
-
-To make it simple, we omit the description of plenty concepts here and you could find them in original notebook above [(link)](https://github.com/fchollet/deep-learning-with-python-notebooks#companion-jupyter-notebooks-for-the-book-deep-learning-with-python). Besides, we directly post Keras 1.2.2 code here and the replacements needed from Keras 2.0.8 to Keras 1.2.2 are noted in `Keras_2-to-1.md`.
+To make it simple, we omit the description of plenty concepts here and you could find them in original notebook above [(link)](https://github.com/fchollet/deep-learning-with-python-notebooks). Besides, we directly post Keras 1.2.2 code here and the replacements needed from Keras 2.0.8 to Keras 1.2.2 are noted in `Keras_2-to-1.md`.
 
 This repository use Python 3.5, Keras 1.2.2 (Keras code), Analytics-zoo 0.4.0 (zoo code). We post the summary of Keras-to-zoo code convertion as well as the table of contents.
 
