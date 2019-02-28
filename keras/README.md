@@ -5,6 +5,8 @@ This repository is built to describe how to write Keras-style code and directly 
 
 To make it simple, we omit the description of plenty concepts here and you could find them in original notebook above [(link)](https://github.com/fchollet/deep-learning-with-python-notebooks). Besides, we directly post Keras 1.2.2 code here and the replacements needed from Keras 2.0.8 to Keras 1.2.2 are noted in `Keras_2-to-1.md`.
 
+The training log of each epoch is stored in INFO, you could see these information though configuring python output level, or store these information in a file and check afterwards, these may includes plenty lines of information. For better expression here, we run the code in Pycharm IDE and **we only paste the last info of last epoch of each training function in this notebook**.
+
 This repository use Python 3.5, Keras 1.2.2 (Keras code), Analytics-zoo 0.4.0 (zoo code). We post the summary of Keras-to-zoo code convertion as well as the table of contents.
 
 ## Summary of Keras-to-zoo code convertion
@@ -36,6 +38,12 @@ The return of `evaluate` method is an `EvaluationResult` object, which is differ
 
 #### Predict result
 The return of `predict` method is RDD, so you need to call `collect` method to collect them, see [Chapter 3.5]()
+
+#### CNN input shape
+In analytics-zoo, the default order is theano-style NCHW, you can also use tensorflow-style NHWC as Keras default just by setting `Convolution2D(dim_ordering="tf")`, see [Chapter 5.1]()
+
+#### Specify input shape
+In analytics-zoo, you need to specify the input shape of first layer, see [Chapter 6.2]()
 
 #### Parameters not supported
 Analytics-zoo does not support following parameters currently, so we just comment these code in this notebook.
