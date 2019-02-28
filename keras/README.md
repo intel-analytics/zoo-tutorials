@@ -46,7 +46,7 @@ In analytics-zoo, the default order is theano-style NCHW, you can also use tenso
 In analytics-zoo, you need to specify the input shape of first layer, see [Chapter 6.2]()
 
 #### Parameters not supported
-Analytics-zoo does not support following parameters currently, so we just comment these code in this notebook.
+Analytics-zoo does not support following parameters currently, so we do not use these code in this notebook if they exist in original notebook.
 
 * validation_split: To split the training data into two parts, another part is used for validation
 * verbose: To control the information showed during training
