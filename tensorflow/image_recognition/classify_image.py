@@ -122,7 +122,7 @@ class NodeLookup(object):
 def create_graph(image_array):
   """Creates a graph from saved GraphDef file and returns a saver."""
   # Creates graph from saved graph_def.pb.
-  w, h, c = image_array.shape
+  h, w, c = image_array.shape
   # get the TFDataset
   sc = init_nncontext()
   image_rdd = sc.parallelize(image_array[None, ...]).map(lambda x: [x])
@@ -139,7 +139,7 @@ def create_graph(image_array):
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def,
                             input_map={'DecodeJpeg:0': image_tensor[0]},
-                            name='zoo')
+                            name='')
 
 
 def run_inference_on_image(image):
@@ -167,7 +167,7 @@ def run_inference_on_image(image):
     # 'DecodeJpeg/contents:0': A tensor containing a string providing JPEG
     #   encoding of the image.
     # Runs the softmax tensor by feeding the image_data as input to the graph.
-    softmax_tensor = sess.graph.get_tensor_by_name('zoo/softmax:0')
+    softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
     predictor = TFPredictor(sess, [softmax_tensor])
     predictions = predictor.predict().collect()
 
