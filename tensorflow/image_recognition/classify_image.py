@@ -46,7 +46,7 @@ import numpy as np
 from six.moves import urllib
 import tensorflow as tf
 from zoo import init_nncontext
-from zoo.pipeline.api.net import TFDataset, TFPredictor
+from zoo.tfpark import TFDataset
 from zoo.tfpark.estimator import TFEstimator, TFEstimatorSpec
 
 FLAGS = None
