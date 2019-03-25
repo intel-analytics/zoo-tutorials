@@ -775,12 +775,19 @@ def rdd_based_input_fn_builder(examples, label_list, max_seq_length, tokenizer, 
     rdd = sc.parallelize(features)
 
     def input_fn(mode):
-        return TFDataset.from_rdd(rdd,
-                                  features={"input_ids": (tf.int32, [max_seq_length]),
-                                            "input_mask": (tf.int32, [max_seq_length]),
-                                            "segment_ids": (tf.int32, [max_seq_length])},
-                                  labels=(tf.int32, []),
-                                  batch_size=batch_size)
+        if mode == tf.estimator.ModeKeys.EVAL or mode == tf.estimator.ModeKeys.TRAIN:
+            return TFDataset.from_rdd(rdd,
+                                      features={"input_ids": (tf.int32, [max_seq_length]),
+                                                "input_mask": (tf.int32, [max_seq_length]),
+                                                "segment_ids": (tf.int32, [max_seq_length])},
+                                      labels=(tf.int32, []),
+                                      batch_size=batch_size)
+        else:
+            return TFDataset.from_rdd(rdd,
+                                      features={"input_ids": (tf.int32, [max_seq_length]),
+                                                "input_mask": (tf.int32, [max_seq_length]),
+                                                "segment_ids": (tf.int32, [max_seq_length])},
+                                      batch_size=batch_size)
     return input_fn
 
 
@@ -908,7 +915,7 @@ def main(_):
       eval_steps = int(len(eval_examples) // FLAGS.eval_batch_size)
 
     eval_input_fn = rdd_based_input_fn_builder(
-        eval_examples, label_list, FLAGS.max_seq_length, tokenizer, FLAGS.train_batch_size)
+        eval_examples, label_list, FLAGS.max_seq_length, tokenizer, FLAGS.eval_batch_size)
 
     result = estimator.evaluate(input_fn=eval_input_fn, eval_methods=["acc"], steps=eval_steps)
 
@@ -941,14 +948,11 @@ def main(_):
                     len(predict_examples) - num_actual_predict_examples)
     tf.logging.info("  Batch size = %d", FLAGS.predict_batch_size)
 
-    predict_drop_remainder = True if FLAGS.use_tpu else False
-    predict_input_fn = file_based_input_fn_builder(
-        input_file=predict_file,
-        seq_length=FLAGS.max_seq_length,
-        is_training=False,
-        drop_remainder=predict_drop_remainder)
+    predict_input_fn = rdd_based_input_fn_builder(
+        predict_examples, label_list, FLAGS.max_seq_length, tokenizer, FLAGS.predict_batch_size)
 
     result = estimator.predict(input_fn=predict_input_fn)
+    print(result.first())
 
     output_predict_file = os.path.join(FLAGS.output_dir, "test_results.tsv")
     with tf.gfile.GFile(output_predict_file, "w") as writer:
