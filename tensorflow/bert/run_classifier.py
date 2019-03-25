@@ -25,6 +25,8 @@ import modeling
 import optimization
 import tokenization
 import tensorflow as tf
+from zoo.common.nncontext import init_nncontext
+from zoo.tfpark.estimator import *
 
 flags = tf.flags
 
@@ -631,17 +633,17 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
     input_ids = features["input_ids"]
     input_mask = features["input_mask"]
     segment_ids = features["segment_ids"]
-    label_ids = features["label_ids"]
+    # label_ids = features["label_ids"]
     is_real_example = None
     if "is_real_example" in features:
       is_real_example = tf.cast(features["is_real_example"], dtype=tf.float32)
     else:
-      is_real_example = tf.ones(tf.shape(label_ids), dtype=tf.float32)
+      is_real_example = tf.ones(tf.shape(labels), dtype=tf.float32)
 
     is_training = (mode == tf.estimator.ModeKeys.TRAIN)
 
     (total_loss, per_example_loss, logits, probabilities) = create_model(
-        bert_config, is_training, input_ids, input_mask, segment_ids, label_ids,
+        bert_config, is_training, input_ids, input_mask, segment_ids, labels,
         num_labels, use_one_hot_embeddings)
 
     tvars = tf.trainable_variables()
@@ -669,40 +671,19 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
                       init_string)
 
     output_spec = None
-    if mode == tf.estimator.ModeKeys.TRAIN:
+    if mode == tf.estimator.ModeKeys.TRAIN or mode == tf.estimator.ModeKeys.EVAL:
 
       train_op = optimization.create_optimizer(
           total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu)
 
-      output_spec = tf.contrib.tpu.TPUEstimatorSpec(
-          mode=mode,
-          loss=total_loss,
-          train_op=train_op,
-          scaffold_fn=scaffold_fn)
-    elif mode == tf.estimator.ModeKeys.EVAL:
-
-      def metric_fn(per_example_loss, label_ids, logits, is_real_example):
-        predictions = tf.argmax(logits, axis=-1, output_type=tf.int32)
-        accuracy = tf.metrics.accuracy(
-            labels=label_ids, predictions=predictions, weights=is_real_example)
-        loss = tf.metrics.mean(values=per_example_loss, weights=is_real_example)
-        return {
-            "eval_accuracy": accuracy,
-            "eval_loss": loss,
-        }
-
-      eval_metrics = (metric_fn,
-                      [per_example_loss, label_ids, logits, is_real_example])
-      output_spec = tf.contrib.tpu.TPUEstimatorSpec(
-          mode=mode,
-          loss=total_loss,
-          eval_metrics=eval_metrics,
-          scaffold_fn=scaffold_fn)
+      output_spec = TFEstimatorSpec(
+              mode=mode,
+              predictions=logits,
+              loss=total_loss)
     else:
-      output_spec = tf.contrib.tpu.TPUEstimatorSpec(
-          mode=mode,
-          predictions={"probabilities": probabilities},
-          scaffold_fn=scaffold_fn)
+        output_spec = TFEstimatorSpec(
+              mode=mode,
+              predictions=logits)
     return output_spec
 
   return model_fn
@@ -778,6 +759,29 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
     features.append(feature)
   return features
+
+
+def to_dict_numpy(feature):
+    res = dict()
+    res["input_ids"] = np.array(feature.input_ids)
+    res["input_mask"] = np.array(feature.input_mask)
+    res["segment_ids"] = np.array(feature.segment_ids)
+    return res, feature.label_id
+
+
+def rdd_based_input_fn_builder(examples, label_list, max_seq_length, tokenizer, batch_size):
+    features = convert_examples_to_features(examples, label_list, max_seq_length, tokenizer)
+    features = [to_dict_numpy(feature) for feature in features]
+    rdd = sc.parallelize(features)
+
+    def input_fn(mode):
+        return TFDataset.from_rdd(rdd,
+                                  features={"input_ids": (tf.int32, [max_seq_length]),
+                                            "input_mask": (tf.int32, [max_seq_length]),
+                                            "segment_ids": (tf.int32, [max_seq_length])},
+                                  labels=(tf.int32, []),
+                                  batch_size=batch_size)
+    return input_fn
 
 
 def main(_):
@@ -856,13 +860,10 @@ def main(_):
 
   # If TPU is not available, this will fall back to normal Estimator on CPU
   # or GPU.
-  estimator = tf.contrib.tpu.TPUEstimator(
-      use_tpu=FLAGS.use_tpu,
+  estimator = TFEstimator(
       model_fn=model_fn,
-      config=run_config,
-      train_batch_size=FLAGS.train_batch_size,
-      eval_batch_size=FLAGS.eval_batch_size,
-      predict_batch_size=FLAGS.predict_batch_size)
+      optimizer=tf.train.AdamOptimizer(FLAGS.learning_rate),
+      config=run_config)
 
   if FLAGS.do_train:
     train_file = os.path.join(FLAGS.output_dir, "train.tf_record")
@@ -872,12 +873,9 @@ def main(_):
     tf.logging.info("  Num examples = %d", len(train_examples))
     tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
     tf.logging.info("  Num steps = %d", num_train_steps)
-    train_input_fn = file_based_input_fn_builder(
-        input_file=train_file,
-        seq_length=FLAGS.max_seq_length,
-        is_training=True,
-        drop_remainder=True)
-    estimator.train(input_fn=train_input_fn, max_steps=num_train_steps)
+    train_input_fn = rdd_based_input_fn_builder(
+        train_examples, label_list, FLAGS.max_seq_length, tokenizer, FLAGS.train_batch_size)
+    estimator.train(input_fn=train_input_fn, steps=num_train_steps)
 
   if FLAGS.do_eval:
     eval_examples = processor.get_dev_examples(FLAGS.data_dir)
@@ -909,14 +907,10 @@ def main(_):
       assert len(eval_examples) % FLAGS.eval_batch_size == 0
       eval_steps = int(len(eval_examples) // FLAGS.eval_batch_size)
 
-    eval_drop_remainder = True if FLAGS.use_tpu else False
-    eval_input_fn = file_based_input_fn_builder(
-        input_file=eval_file,
-        seq_length=FLAGS.max_seq_length,
-        is_training=False,
-        drop_remainder=eval_drop_remainder)
+    eval_input_fn = rdd_based_input_fn_builder(
+        eval_examples, label_list, FLAGS.max_seq_length, tokenizer, FLAGS.train_batch_size)
 
-    result = estimator.evaluate(input_fn=eval_input_fn, steps=eval_steps)
+    result = estimator.evaluate(input_fn=eval_input_fn, eval_methods=["acc"], steps=eval_steps)
 
     output_eval_file = os.path.join(FLAGS.output_dir, "eval_results.txt")
     with tf.gfile.GFile(output_eval_file, "w") as writer:
@@ -978,4 +972,5 @@ if __name__ == "__main__":
   flags.mark_flag_as_required("vocab_file")
   flags.mark_flag_as_required("bert_config_file")
   flags.mark_flag_as_required("output_dir")
+  sc = init_nncontext("BERT MRPC Classification Example")
   tf.app.run()
