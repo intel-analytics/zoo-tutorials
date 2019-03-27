@@ -1,5 +1,7 @@
 # Tutorials for running distribued Keras (v1.2.2) on Analytics Zoo
-Tutorials for running _**distribued Keras (v1.2.2) on Analytics Zoo**_. These tutorials are ported from François Chollet's [Jupyter notebooks](https://github.com/fchollet/deep-learning-with-python-notebooks) for the book [Deep Learning with Python (Manning Publications)](https://www.manning.com/books/deep-learning-with-python?a_aid=keras&a_bid=76564dff)
+Tutorials for running _**distribued Keras (v1.2.2)**_ on Apache Spark in [Analytics Zoo](https://github.com/intel-analytics/analytics-zoo).
+
+These tutorials are ported from François Chollet's [Jupyter notebooks](https://github.com/fchollet/deep-learning-with-python-notebooks) for the book [Deep Learning with Python (Manning Publications)](https://www.manning.com/books/deep-learning-with-python?a_aid=keras&a_bid=76564dff)
 
 This repository is built to describe how to write Keras-style code and directly run it in analytics-zoo so that we could run the original Keras code in distributed mode via limited modification. We make this repository based on notebook https://github.com/fchollet/deep-learning-with-python-notebooks#companion-jupyter-notebooks-for-the-book-deep-learning-with-python, which is the sample code repository of book "Deep Learning with Python" based on Keras 2.0.8 and we pick some basic chapters from it. 
 
@@ -60,4 +62,4 @@ The main purpose of this repository is to decribe the convertion from Keras to a
 * Chapter 6:
     * [6.2: Understanding RNNs]()
 
-    
+
