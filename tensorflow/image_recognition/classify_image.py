@@ -55,6 +55,8 @@ FLAGS = None
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 # pylint: enable=line-too-long
 
+sc = init_nncontext()
+
 
 class NodeLookup(object):
   """Converts integer node ID's to human readable labels."""
@@ -129,7 +131,7 @@ def create_graph(features):
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def,
-                            input_map={'DecodeJpeg:0': features[0]},
+                            input_map={'DecodeJpeg:0': features},
                             name='')
 
 
@@ -158,13 +160,8 @@ def run_inference_on_image(image):
 
   def input_fn(mode):
     if mode == tf.estimator.ModeKeys.PREDICT:
-      h, w, c = image_array.shape
       # get the TFDataset
-      sc = init_nncontext()
-      image_rdd = sc.parallelize(image_array[None, ...])
-      image_dataset = TFDataset.from_rdd(image_rdd,
-                                         features=(tf.uint8, [w, h, c]),
-                                         batch_per_thread=28)
+      image_dataset = TFDataset.from_ndarrays(image_array[None, ...])
       return image_dataset
     else:
       raise NotImplementedError
