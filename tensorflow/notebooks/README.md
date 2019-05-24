@@ -14,8 +14,5 @@ chmod +x analytics-zoo/dist/bin/jupyter-with-zoo.sh
 analytics-zoo/dist/bin/jupyter-with-zoo.sh
 ```
 
-## Tips
-Here are some tips to resolve some typical problems.
-1. Cannot import zoo in python
-    + This might be caused by installation without `pip`, then you need to add Analytics Zoo into your `PYTHONPATH` by `export PYTHONPATH=$PYTHONPATH:/path/to/analytics-zoo/pyzoo`
-2. For distributted training, evaluation, and prediction, we recommend you to use `tensorflow==1.10.0`.
+## Note
+For distributted training, evaluation, and prediction, you should use tensorflow 1.10.0. You could install the specific tensorflow with `pip install tensorflow==1.10.0`.
