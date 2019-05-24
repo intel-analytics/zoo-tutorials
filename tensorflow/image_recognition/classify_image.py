@@ -1,5 +1,6 @@
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
-#
+# Copyright 2015 The TensorFlow Authors, 2019 Analytics Zoo Authors.
+# All Rights Reserved.
+# 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -44,12 +45,17 @@ import tarfile
 import numpy as np
 from six.moves import urllib
 import tensorflow as tf
+from zoo import init_nncontext
+from zoo.tfpark import TFDataset
+from zoo.tfpark.estimator import TFEstimator, TFEstimatorSpec
 
 FLAGS = None
 
 # pylint: disable=line-too-long
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 # pylint: enable=line-too-long
+
+sc = init_nncontext()
 
 
 class NodeLookup(object):
@@ -117,14 +123,16 @@ class NodeLookup(object):
     return self.node_lookup[node_id]
 
 
-def create_graph():
+def create_graph(features):
   """Creates a graph from saved GraphDef file and returns a saver."""
   # Creates graph from saved graph_def.pb.
   with tf.gfile.FastGFile(os.path.join(
       FLAGS.model_dir, 'classify_image_graph_def.pb'), 'rb') as f:
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
-    _ = tf.import_graph_def(graph_def, name='')
+    _ = tf.import_graph_def(graph_def,
+                            input_map={'DecodeJpeg:0': features},
+                            name='')
 
 
 def run_inference_on_image(image):
@@ -138,33 +146,38 @@ def run_inference_on_image(image):
   """
   if not tf.gfile.Exists(image):
     tf.logging.fatal('File does not exist %s', image)
-  image_data = tf.gfile.FastGFile(image, 'rb').read()
+  from PIL import Image
+  image_array = np.array(Image.open(image))[:, :, 0:3]
 
-  # Creates graph from saved GraphDef.
-  create_graph()
+  # Define functions for Estimator
+  def model_fn(features, labels, mode):
+    create_graph(features)
+    if mode == tf.estimator.ModeKeys.PREDICT:
+      softmax_tensor = tf.get_default_graph().get_tensor_by_name('softmax:0')
+      return TFEstimatorSpec(mode, predictions=softmax_tensor)
+    else:
+      raise NotImplementedError
 
-  with tf.Session() as sess:
-    # Some useful tensors:
-    # 'softmax:0': A tensor containing the normalized prediction across
-    #   1000 labels.
-    # 'pool_3:0': A tensor containing the next-to-last layer containing 2048
-    #   float description of the image.
-    # 'DecodeJpeg/contents:0': A tensor containing a string providing JPEG
-    #   encoding of the image.
-    # Runs the softmax tensor by feeding the image_data as input to the graph.
-    softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
-    predictions = sess.run(softmax_tensor,
-                           {'DecodeJpeg/contents:0': image_data})
-    predictions = np.squeeze(predictions)
+  def input_fn(mode):
+    if mode == tf.estimator.ModeKeys.PREDICT:
+      # get the TFDataset
+      image_dataset = TFDataset.from_ndarrays(image_array[None, ...])
+      return image_dataset
+    else:
+      raise NotImplementedError
 
-    # Creates node ID --> English string lookup.
-    node_lookup = NodeLookup()
+  estimator = TFEstimator(model_fn)
+  predictions = estimator.predict(input_fn).collect()
+  predictions = np.squeeze(predictions)
 
-    top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
-    for node_id in top_k:
-      human_string = node_lookup.id_to_string(node_id)
-      score = predictions[node_id]
-      print('%s (score = %.5f)' % (human_string, score))
+  # Creates node ID --> English string lookup.
+  node_lookup = NodeLookup()
+
+  top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
+  for node_id in top_k:
+    human_string = node_lookup.id_to_string(node_id)
+    score = predictions[node_id]
+    print('%s (score = %.5f)' % (human_string, score))
 
 
 def maybe_download_and_extract():
