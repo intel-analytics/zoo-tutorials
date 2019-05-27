@@ -174,10 +174,10 @@ sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
-        --driver-memory 16g  \
+        --driver-memory 8g  \
         --total-executor-cores 2  \
         --executor-cores 2  \
-        --executor-memory 16g \
+        --executor-memory 8g \
         --conf spark.akka.frameSize=64 \
         --py-files ${ANALYTICS_ZOO_PYZIP},${ZOO_TUTORIALS}/keras/tmp_test.py \
         --properties-file ${ANALYTICS_ZOO_CONF} \
