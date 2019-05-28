@@ -17,7 +17,7 @@ start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/2.1-a-first-look-at-a-neural-network
 
 sed "s/nb_epoch=5/nb_epoch=5/g" ${ZOO_TUTORIALS}/keras/2.1-a-first-look-at-a-neural-network.py >${ZOO_TUTORIALS}/keras/tmp_test.py
-sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+#sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
