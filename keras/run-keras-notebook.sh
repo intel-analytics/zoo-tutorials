@@ -17,7 +17,7 @@ start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/2.1-a-first-look-at-a-neural-network
 
 sed "s/nb_epoch=5/nb_epoch=5/g" ${ZOO_TUTORIALS}/keras/2.1-a-first-look-at-a-neural-network.py >${ZOO_TUTORIALS}/keras/tmp_test.py
-sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+#sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
@@ -43,6 +43,9 @@ start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/3.5-classifying-movie-reviews
 sed "s/nb_epoch=20/nb_epoch=4/g" ${ZOO_TUTORIALS}/keras/3.5-classifying-movie-reviews.py >${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^matplotlib.use('\''Agg'\'')$/a\from matplotlib import pyplot as plt' ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
@@ -68,6 +71,9 @@ start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/3.6-classifying-newswires
 sed "s/nb_epoch=20/nb_epoch=8/g" ${ZOO_TUTORIALS}/keras/3.6-classifying-newswires.py >${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^matplotlib.use('\''Agg'\'')$/a\from matplotlib import pyplot as plt' ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
@@ -95,6 +101,9 @@ sed "s/num_nb_epoch = 50/num_nb_epoch=2/g" ${ZOO_TUTORIALS}/keras/3.7-predicting
 sed -i "s/num_epochs = 500/num_epochs = 20/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/nb_epoch=150/nb_epoch=15/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^matplotlib.use('\''Agg'\'')$/a\from matplotlib import pyplot as plt' ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
@@ -120,6 +129,9 @@ start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/4.4-overfitting-and-underfitting
 sed "s/nb_epoch=20/nb_epoch=1/g" ${ZOO_TUTORIALS}/keras/4.4-overfitting-and-underfitting.py >${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^matplotlib.use('\''Agg'\'')$/a\from matplotlib import pyplot as plt' ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
@@ -171,6 +183,9 @@ start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/6.2-understanding-recurrent-neural-networks
 sed "s/nb_epoch=10/nb_epoch=10/g" ${ZOO_TUTORIALS}/keras/6.2-understanding-recurrent-neural-networks.py >${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i '/^matplotlib.use('\''Agg'\'')$/a\from matplotlib import pyplot as plt' ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
         --driver-cores 2  \
