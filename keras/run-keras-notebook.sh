@@ -98,8 +98,8 @@ echo "#4 3.7-predicting-house-prices"
 start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/3.7-predicting-house-prices
 sed "s/num_nb_epoch = 50/num_nb_epoch=2/g" ${ZOO_TUTORIALS}/keras/3.7-predicting-house-prices.py >${ZOO_TUTORIALS}/keras/tmp_test.py
-sed -i "s/num_epochs = 500/num_epochs = 20/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
-sed -i "s/nb_epoch=150/nb_epoch=15/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/num_epochs = 500/num_epochs = 10/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
+sed -i "s/nb_epoch=150/nb_epoch=5/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
@@ -155,7 +155,7 @@ echo "#6 5.1-introduction-to-convnets"
 #timer
 start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/5.1-introduction-to-convnets
-sed "s/nb_epoch=5/nb_epoch=5/g" ${ZOO_TUTORIALS}/keras/5.1-introduction-to-convnets.py >${ZOO_TUTORIALS}/keras/tmp_test.py
+sed "s/nb_epoch=5/nb_epoch=1/g" ${ZOO_TUTORIALS}/keras/5.1-introduction-to-convnets.py >${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 ${SPARK_HOME}/bin/spark-submit \
         --master ${MASTER} \
@@ -181,7 +181,7 @@ echo "#7 6.2-understanding-recurrent-neural-networks"
 #timer
 start=$(date "+%s")
 ${ZOO_TUTORIALS}/keras/ipynb2py.sh ${ZOO_TUTORIALS}/keras/6.2-understanding-recurrent-neural-networks
-sed "s/nb_epoch=10/nb_epoch=10/g" ${ZOO_TUTORIALS}/keras/6.2-understanding-recurrent-neural-networks.py >${ZOO_TUTORIALS}/keras/tmp_test.py
+sed "s/nb_epoch=10/nb_epoch=2/g" ${ZOO_TUTORIALS}/keras/6.2-understanding-recurrent-neural-networks.py >${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/get_ipython()/#/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i "s/import matplotlib.pyplot as plt/import matplotlib/g" ${ZOO_TUTORIALS}/keras/tmp_test.py
 sed -i '/^import matplotlib$/a\matplotlib.use('\''Agg'\'')' ${ZOO_TUTORIALS}/keras/tmp_test.py
