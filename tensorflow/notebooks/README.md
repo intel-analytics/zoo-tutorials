@@ -2,6 +2,14 @@
 ## Install Analytics Zoo
 To install the Analytics Zoo, please follow [here](https://analytics-zoo.github.io/0.4.0/#PythonUserGuide/install/). We recommend you to install using non-pip method by cloning Analytcis Zoo repo so that you could always use the newest features.
 
+## Dependencies
+TensorFlow 1.10.0
+matplotlib
+sklearn
+Pillow
+pandas
+
+
 ## Setup Analytics Zoo
 After installation, please follow [here](https://analytics-zoo.github.io/0.4.0/#PythonUserGuide/run/) to setup the environment.
 
