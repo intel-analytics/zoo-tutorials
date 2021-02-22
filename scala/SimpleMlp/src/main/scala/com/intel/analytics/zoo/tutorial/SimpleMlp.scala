@@ -1,4 +1,4 @@
-package com.github.qiuxin2012
+package com.intel.analytics.zoo.tutorial
 
 import com.intel.analytics.bigdl.dataset.Sample
 import com.intel.analytics.zoo.pipeline.api.keras.layers._

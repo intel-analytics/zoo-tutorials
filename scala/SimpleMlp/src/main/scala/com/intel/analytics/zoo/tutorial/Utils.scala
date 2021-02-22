@@ -1,4 +1,4 @@
-package com.github.qiuxin2012
+package com.intel.analytics.zoo.tutorial
 
 import scopt.OptionParser
 
