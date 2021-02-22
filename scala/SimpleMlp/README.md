@@ -1,6 +1,6 @@
 # SimpleMlp
 
-This is an example about how to use [analytics-zoo](https://github.com/intel-analytics/analytics-zoo) to build your own deep learning application. You can use both maven or sbt to create your project and add analytics-zoo to your dependency, see pom.xml and build.sbt for details.   
+This is an example about how to use [Analytics Zoo](https://github.com/intel-analytics/analytics-zoo) to build your own deep learning application. You can use both maven or sbt to create your project and add analytics-zoo to your dependency, see pom.xml and build.sbt for details.   
 
 ## Build
 ### 1. Build with maven
