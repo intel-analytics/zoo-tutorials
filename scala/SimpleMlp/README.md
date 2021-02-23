@@ -18,7 +18,7 @@ sbt assembly
 ```bash
 spark-submit \
   --master local[4] \
-  --class com.github.qiuxin2012.SimpleMlp \
+  --class com.intel.analytics.zoo.tutorial.SimpleMlp \
   target/simplemlp-0.1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
