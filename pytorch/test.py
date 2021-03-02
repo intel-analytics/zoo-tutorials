@@ -1,17 +1,17 @@
 from zoo.orca import init_orca_context, stop_orca_context
 from zoo.orca import OrcaContext
 
-# recommended to set it to True when running Analytics Zoo in Jupyter notebook.
-OrcaContext.log_output = True # (this will display terminal's stdout and stderr in the Jupyter notebook).
-init_orca_context(cores=1, memory="2g")   # run in local mode
+
+OrcaContext.log_output = True               # (this will display terminal's stdout and stderr in the Jupyter notebook).
+init_orca_context(cores=1, memory="2g")     # run in local mode
 
 
 import torch.nn as nn
 import torch.nn.functional as F
 
 
-max_features = 10000  # number of words to consider as features
-maxlen = 500  # cut texts after this number of words (among top max_features most common words)
+max_features = 10000    # number of words to consider as features
+maxlen = 500            # cut texts after this number of words (among top max_features most common words)
 batch_size = 128
 
 
@@ -42,13 +42,13 @@ class SimpleRNN(nn.Module):
         # self.out_act = nn.Sigmoid()
 
     def forward(self, text):
-        embedded = self.embedding(text.transpose(0, 1))
-        output, hidden = self.rnn(embedded)
+        embedded = self.embedding(text.transpose(0, 1))     # text: [128, 500] embedded: [500, 128, 32]
+        output, hidden = self.rnn(embedded)                 # hidden: [1, 128, 32]
 
         es = "output: ", output[-1,:,:].shape, " hidden: ", hidden.shape
         assert torch.equal(output[-1,:,:], hidden.squeeze(0)), es
         #return self.out_act(output)
-        return self.fc(hidden.squeeze(0))
+        return self.fc(hidden.squeeze(0))                   # [128, 1]
 
 
 
@@ -56,6 +56,8 @@ import torch
 from torchtext import data
 from torchtext.datasets import IMDB
 
+
+# Load data
 SEED = 1234
 
 torch.manual_seed(SEED)
@@ -69,18 +71,11 @@ print("Loading data")
 train_data, test_data = IMDB.splits(TEXT, LABEL)
 train_data, valid_data = train_data.split(0.8)
 
-#TEXT.build_vocab(train_data, max_size=max_features)
 TEXT.build_vocab(train_data, 
                  max_size = max_features, 
                  vectors = "glove.6B.100d", 
                  unk_init = torch.Tensor.normal_)
 LABEL.build_vocab(train_data)
-
-'''
-train_iterator, valid_iterator = data.BucketIterator.splits(
-    (train_data, valid_data),
-    batch_size=128)
-'''
 
 train_iterator, valid_iterator = data.BucketIterator.splits(
     (train_data, valid_data),
@@ -88,12 +83,14 @@ train_iterator, valid_iterator = data.BucketIterator.splits(
 train_list = list(train_iterator)     # A list of torchtext.data.batch.Batch
 valid_list = list(valid_iterator) 
 
+# turn data into lists
 train_text = [e.text for e in train_list]
 train_label = [e.label for e in train_list]
 valid_text = [e.text for e in valid_list]
 valid_label = [e.label for e in valid_list]
 
 
+# Create dataset
 from torch.utils.data import Dataset
 
 class IMDBDataset(Dataset):
@@ -113,7 +110,7 @@ class IMDBDataset(Dataset):
         return len(self.text)
 
     def __getitem__(self, index):
-        text = self.text[index].squeeze(1)
+        text = self.text[index].squeeze(1)      # [500, 1] -> [500]
         label = self.label[index]
 
         return text, label
@@ -149,7 +146,7 @@ adam = torch.optim.Adam(model.parameters(), 0.001)
 sgd = torch.optim.SGD(model.parameters(), lr=1e-3)
 #criterion = torch.nn.BCELoss()
 #criterion = torch.nn.CrossEntropyLoss()
-criterion = nn.BCEWithLogitsLoss()
+criterion = nn.BCEWithLogitsLoss()      # sigmoid + BCE
 metrics=[Accuracy()]
 
 est = Estimator.from_torch(model=model, optimizer=rmsprop, loss=criterion, metrics=metrics)
