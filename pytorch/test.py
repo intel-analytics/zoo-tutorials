@@ -20,17 +20,35 @@ class SimpleRNN(nn.Module):
         super(SimpleRNN, self).__init__()
 
         self.embedding = nn.Embedding(input_dim, 32)
+        for name, param in self.embedding.named_parameters(): 
+            torch.nn.init.uniform_(param)
+        
         self.rnn = nn.RNN(32, 32)
+        for name, param in self.rnn.named_parameters(): 
+            if 'weight_ih' in name:
+                torch.nn.init.xavier_uniform_(param)
+            elif 'weight_hh' in name:
+                torch.nn.init.orthogonal_(param)
+            elif 'bias' in name:
+                torch.nn.init.zeros_(param)
+                
         self.fc = nn.Linear(32, 1)
-        self.out_act = nn.Sigmoid()
+        for name, param in self.rnn.named_parameters(): 
+            if 'weight_ih' in name:
+                torch.nn.init.xavier_uniform_(param)
+            elif 'bias' in name:
+                torch.nn.init.zeros_(param)
+                
+        # self.out_act = nn.Sigmoid()
 
     def forward(self, text):
-        #embedded = self.embedding(text.transpose(0, 1))
-        embedded = self.embedding(text)
+        embedded = self.embedding(text.transpose(0, 1))
         output, hidden = self.rnn(embedded)
-        # output = self.fc(output[-1, :, :])
-        output = self.fc(output[:, -1, :])
-        return self.out_act(output)
+
+        es = "output: ", output[-1,:,:].shape, " hidden: ", hidden.shape
+        assert torch.equal(output[-1,:,:], hidden.squeeze(0)), es
+        #return self.out_act(output)
+        return self.fc(hidden.squeeze(0))
 
 
 
@@ -120,15 +138,18 @@ INPUT_DIM = len(TEXT.vocab)
 EMBEDDING_DIM = 32
 HIDDEN_DIM = 32
 
+
+
 model = SimpleRNN(INPUT_DIM)
 model.train()
 print(model)
 
-rmsprop = torch.optim.RMSprop(model.parameters(), lr=0.0001)
+rmsprop = torch.optim.RMSprop(model.parameters(), lr=0.0001, weight_decay=0.9, eps=1e-7)
 adam = torch.optim.Adam(model.parameters(), 0.001) 
 sgd = torch.optim.SGD(model.parameters(), lr=1e-3)
-criterion = torch.nn.BCELoss()
-#criterion = nn.BCEWithLogitsLoss()
+#criterion = torch.nn.BCELoss()
+#criterion = torch.nn.CrossEntropyLoss()
+criterion = nn.BCEWithLogitsLoss()
 metrics=[Accuracy()]
 
 est = Estimator.from_torch(model=model, optimizer=rmsprop, loss=criterion, metrics=metrics)
