@@ -57,5 +57,5 @@ and MASTER specifies the spark-mode e.g local, yarn, standalone etc...
 
 3. TPC-H for PIG (https://github.com/ssavvides/tpch-pig)
 
-
-This tpch-spark is based on [Savvas Savvides's tpch-spark](https://github.com/ssavvides/tpch-spark).
+--------------
+This project is based on [Savvas Savvides's tpch-spark](https://github.com/ssavvides/tpch-spark).
