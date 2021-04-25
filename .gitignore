@@ -24,3 +24,9 @@ project/plugins/project/
 nohup.out
 model.*
 state.*
+
+# tpch dbgen specific
+tpch-spark/dbgen/*.tbl
+tpch-spark/dbgen/*.o
+tpch-spark/dbgen/dbgen
+tpch-spark/dbgen/qgen
