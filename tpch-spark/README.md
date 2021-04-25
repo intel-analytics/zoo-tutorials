@@ -41,10 +41,12 @@ location the of the input data and where the output should be saved.
 You can then run a query using:
 
 ```
-spark-submit --class "main.scala.TpchQuery" --master MASTER target/scala-2.11/spark-tpc-h-queries_2.11-1.0.jar ##
+spark-submit --class "main.scala.TpchQuery" --master MASTER target/scala-2.11/spark-tpc-h-queries_2.11-1.0.jar INPUT_DIR OUTPUT_DIR [QUERY]
 ```
 
-where ## is the number of the query to run e.g 1, 2, ..., 22
+INPUT_DIR is the tpch's data dir.
+OUTPUT_DIR is the dir to write the query result.
+The optional parameter [QUERY] is the number of the query to run e.g 1, 2, ..., 22
 and MASTER specifies the spark-mode e.g local, yarn, standalone etc...
 
 ### Other Implementations
