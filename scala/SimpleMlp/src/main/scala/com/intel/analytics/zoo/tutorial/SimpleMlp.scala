@@ -1,15 +1,15 @@
 package com.intel.analytics.zoo.tutorial
 
-import com.intel.analytics.bigdl.dataset.Sample
-import com.intel.analytics.zoo.pipeline.api.keras.layers._
-import com.intel.analytics.zoo.pipeline.api.keras.models._
-import com.intel.analytics.bigdl.tensor.Tensor
+import com.intel.analytics.bigdl.dllib.feature.dataset.Sample
+import com.intel.analytics.bigdl.dllib.keras.layers._
+import com.intel.analytics.bigdl.dllib.keras.models._
+import com.intel.analytics.bigdl.dllib.tensor.Tensor
 import org.apache.spark.SparkConf
 import Utils._
-import com.intel.analytics.bigdl.nn.MSECriterion
-import com.intel.analytics.zoo.common.NNContext._
-import com.intel.analytics.bigdl.optim.SGD
-import com.intel.analytics.bigdl.utils.Shape
+import com.intel.analytics.bigdl.dllib.nn.MSECriterion
+import com.intel.analytics.bigdl.dllib.NNContext._
+import com.intel.analytics.bigdl.dllib.optim.SGD
+import com.intel.analytics.bigdl.dllib.utils.Shape
 
 object SimpleMlp {
 

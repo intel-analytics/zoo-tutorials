@@ -7,7 +7,7 @@ organization := "com.github.qiuxin2012"
 libraryDependencies ++= Seq(
   "org.apache.spark" % "spark-core_2.11" % "2.4.3" % "compile",
   "org.apache.spark" % "spark-mllib_2.11" % "2.4.3" % "compile",
-  "com.intel.analytics.zoo" % "analytics-zoo-bigdl_0.12.1-spark_2.4.3" % "0.9.0"
+  "com.intel.analytics.bigdl" % "bigdl-dllib-spark_2.4.6" % "0.14.0-SNANSHOT"
 )
 
 resolvers ++= Seq(
