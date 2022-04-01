@@ -15,7 +15,7 @@ make OS=LINUX
 ### Generate test data ###
 All below steps should be run under `tpcds-spark` directory
 ```bash
-sbt "test:runMain com.databricks.spark.sql.perf.tpcds.GenTPCDSData -d <dsdgenDir> -s <scaleFactor> -l <dataDir> -f parquet"
+sbt "test:runMain perf.tpcds.GenTPCDSData -d <dsdgenDir> -s <scaleFactor> -l <dataDir> -f parquet"
 ```
 `dsdgenDir` is the path of `tpcds-kit/tools`, `dataDir` is the path to store generated data.
 
@@ -36,7 +36,7 @@ $SPARK_HOME/bin/spark-submit \
         target/scala-2.12/tpcds-benchmark_2.12-0.1.jar <dataDir> <dsdgenDir> <scaleFactor>
 ```
 ### Execute TPC-DS queries ###
-Argument `outputDir` is the path of results, optional arguement `query`  is the query number to run. Multiple query numbers should be separated by space. If no query number is specified, all 1-99 queries would be executed.
+`outputDir` is the path to store results, optional argument `query` is the query number to run. Multiple query numbers should be separated by space. If no query number is specified, all 1-99 queries would be executed.
 ```bash
 $SPARK_HOME/bin/spark-submit \
         --class "TPCDSBenchmark" \
