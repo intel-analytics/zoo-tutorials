@@ -1,6 +1,6 @@
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.sql.{SQLContext, SparkSession}
-import perf.tpcds.TPCDS
+import com.databricks.spark.sql.perf.tpcds.TPCDS
 import org.apache.spark.sql.functions._
 
 object TPCDSBenchmark {

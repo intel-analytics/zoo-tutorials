@@ -1,6 +1,6 @@
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.sql.{SQLContext, SparkSession}
-import perf.tpcds.TPCDSTables
+import com.databricks.spark.sql.perf.tpcds.TPCDSTables
 
 object createTables {
 

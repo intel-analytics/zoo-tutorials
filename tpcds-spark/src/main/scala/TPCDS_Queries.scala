@@ -4,7 +4,7 @@
 
 import org.apache.commons.io.IOUtils
 
-import perf.{Benchmark, ExecutionMode, Query}
+import com.databricks.spark.sql.perf.{Benchmark, ExecutionMode, Query}
 
 /**
  * This implements the official TPCDS v2.4 queries with only cosmetic modifications.
