@@ -18,12 +18,12 @@ If `zoo-tutorials` is not cloned with `--recursive` option, firstly clone submod
 cd /path/to/zoo-tutorials
 git submodule update --init
 ```
-Then generate TPC-DS data
+Then generate TPC-DS data, this following command can be used to generate all 99 queries,
 ```bash
 cd tpcds-spark/spark-sql-perf
 sbt "test:runMain com.databricks.spark.sql.perf.tpcds.GenTPCDSData -d <dsdgenDir> -s <scaleFactor> -l <dataDir> -f parquet"
 ```
-`dsdgenDir` is the path of `tpcds-kit/tools`, `dataDir` is the path to store generated data.
+`dsdgenDir` is the path of `tpcds-kit/tools`, `scaleFactor` is the size of the data, for example `-s 1` will generate 1G data, `dataDir` is the path to store generated data.
 
 ## Run benchmark ##
 Note that all below steps should be run under `zoo-tutorials/tpcds-spark` directory.
