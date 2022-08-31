@@ -85,7 +85,7 @@ object TpchQuery {
     }
     println(s"Will run ${queryNums.mkString(" ")}")
 
-    val conf = new SparkConf().setAppName("Simple Application")
+    val conf = new SparkConf()
     val sc = new SparkContext(conf)
 
     // read files from local FS
