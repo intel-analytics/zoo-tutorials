@@ -26,7 +26,7 @@ def main():
     if len(sys.argv) < 3:
         print("Usage:")
         print("\t<spark-submit> --master local main.py")
-        print("\t\t<tpch_data_root_path> <tpch_query_output_path> <true for SQL | false for functional> <query_number>")
+        print("\t\t<tpch_data_root_path> <tpch_query_output_path> <true for SQL | false for functional> <query_number>(optional)")
         exit(1)
 
     input_dir = sys.argv[1]
