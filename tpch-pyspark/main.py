@@ -23,10 +23,10 @@ from pyspark.sql import SparkSession
 
 
 def main():
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 4:
         print("Usage:")
         print("\t<spark-submit> --master local main.py")
-        print("\t\t<tpch_data_root_path> <query_number> <num_iterations> <true for SQL | false for functional>")
+        print("\t\t<tpch_data_root_path> <tpch_query_output_path> <true for SQL | false for functional> <query_number>(optional)")
         exit(1)
 
     input_dir = sys.argv[1]
@@ -34,7 +34,7 @@ def main():
     use_sql = sys.argv[3].lower() == "true"
     query_list = []
     if (len(sys.argv) > 4):
-        query_number = str(sys.argv[3])
+        query_number = str(sys.argv[4])
         query_list.append(query_number)
     else:
         query_list = range(1, 23)
